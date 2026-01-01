@@ -19,7 +19,7 @@ These globals are not provided and must be reimplemented by you:
 
 Adonis is an admin script that experience developers can use freely, that also comes packed with optional code designed to curb cheating. The 2 modules "Anti" and "Anti Cheat" are responsible for this, and serve 2 different yet similar purposes:
 
-1. The **Anti** module appears to be an **anti exploit** module, targeting executors or poor scripts directly.
+1. The **Anti** module appears to be an **anti exploit** module, targeting executor flaws or poor scripts directly.
 2. The **Anti Cheat** module appears to be just that, an **anti cheat**, checking for speed hacks, noclip, anti-idle, and more, *locally*.
 
 Both of these modules will rely on the same function to report detections to the server, called **Detected**. It is an anonymous function that is defined inside the **Anti** module:
