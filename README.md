@@ -31,7 +31,7 @@ When called, it will call the network **Send** function to let the server know a
 
 Adonis will also protect it's Detected function using **debug.info**. It will first cache all information about the **Detected** function on startup (like source identifier, line number, argument count, etc). It will then continuously call **debug.info** and compare the results with the 1st cached result.
 
-This works because the **Detected** function is a *lua closure*. Depending on how your executor performs hooking, the function itself will likely have to be modified in some way to make it jump to the desired detour (which might be a wrapped *c closure* automatically on some executors) when called. Whether this detection is effective or not will depend on your executor and their method of hooking lua closures. When Adonis detects any change with the functions info, it will crash itself:
+This works because the **Detected** function is a *lua closure*. Depending on how your executor performs hooking, the function itself will likely have to be modified in some way to make it jump to the desired detour when called. Whether this detection is effective or not will depend on your executor and their method of hooking lua closures. When Adonis detects any change with the functions info, it will crash itself:
 
 <img width="881" height="308" alt="Hook Detection Code" src="https://github.com/user-attachments/assets/408bfa5b-549e-4038-adf6-daf4fbefa79c" />
 
