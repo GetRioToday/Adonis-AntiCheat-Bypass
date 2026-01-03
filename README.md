@@ -12,7 +12,7 @@ The following UNC & sUNC functions are required:
 These globals are not provided and must be reimplemented by you:
 
 1. LocalClient: The local player of the game
-2. REnv: The roblox environment
+2. REnv: The environment given to normal scripts (from getrenv)
 3. Hooks: A hooking module that wraps around hookfunction()
 
 # How The Detections Work
@@ -42,16 +42,14 @@ In order to bypass this, we must first find the "Detected" function. We can do t
 
 We see it has 2 easy strings, " - On Xbox" and " - On mobile". Strings like these are **constants**, they will never change, so we will give these constants to **filtergc**. They should be unique enough and we will only get 1 result back.
 
-You can also pass in the SHA-384 hash of the **Detected** function, however, this is considerably slower. In order to find a function by its hash, the executor must first hash every single function it finds to compare it with the input hash. This means your executor must perform *x* hashes where `x = gc function count`, which can be super slow or fast, completely depending on the experience Adonis is being used in.
-
-Even though the executor is likely hashing on the C++ side, when hashing such large quantities, you will notice your game freezing for several seconds. You may find an example of how your executor hashes functions [by clicking here.](https://rubis.app/view/?scrap=mwDweOS6zirsPJtc&type=cpp)
+You can also pass in the SHA-384 hash of the **Detected** function which can be seen as more reliable, however, this is considerably slower considering your executor will have to hash potentially a large amount of functions to find a match, depending on if the **Detected** function is near the front or back of the list.
 
 After we find the **Detected** function, we must first cache & hook the **debug.info** function to bypass hook checks. To do so, we can call **debug.info** on the **Detected** function, store all the results into locals, and then create a detour for **debug.info**. We check if the input is **Detected**, which means a caller would like information about the **Detected** function, and if so we return the previously cached locals. Otherwise, we call the original **debug.info** function.
 
-Now that **debug.info** is hooked, we can simply detour **Detected** and make it yield infinitely when called (or just return instantly). Once done, you will no longer be detected by Adonis.
+Now that **debug.info** is hooked, we can simply detour **Detected** and make it yield infinitely when called (or just return "true" instantly). Once done, you will no longer be detected by Adonis.
 
-⚠️ If you choose to return instantly, you should make sure to return "true", as you can see below the hook-check related code will also check if **Detected** returns a non-truthy value.
-<img width="881" height="308" alt="Hook Detection Code" src="https://github.com/user-attachments/assets/408bfa5b-549e-4038-adf6-daf4fbefa79c" />
+### ⚠️ Make sure you do not return a falsely value in your **Detected** detour, such as null or false. Otherwise, this "not Detected(...)" statement will get you caught up:
+<img width="440" height="154" alt="Hook Detection Code" src="https://github.com/user-attachments/assets/408bfa5b-549e-4038-adf6-daf4fbefa79c" />
 
 You can find a proof of concept bypass [by clicking here.](https://github.com/GetRioToday/Adonis-AntiCheat-Bypass/blob/main/Bypass.lua)
 
@@ -59,4 +57,4 @@ You can find a proof of concept bypass [by clicking here.](https://github.com/Ge
 
 Adonis has many, many, detections in both it's **Anti** and **Anti-Cheat** module. Instead of targeting each detection, we can simply target the code responsible for the consequences & snitching.
 
-This means that by blocking the **Detected** function, all the Adonis detections will still be running & working, it just cannot do anything about it, nor can it tell anyone about it.
+This means that by blocking the **Detected** function, all the Adonis detections will still be running & working, it just cannot do anything about it because we've cut off it's communication line, as well as it's ability to crash when a detection is caught.
