@@ -1,8 +1,8 @@
 local function BypassAdonis()
 	local Query = {
-		--Hash = "605A34235509ABBB6946D10B499B526AC72774E441C3F9BAE4B63D321C6E759347D864CE879B39864743C0EEAC444FFF";
-		Constants = {" - On Xbox", " - On mobile", "_"}
-		IgnoreExecutor = true
+		--Hash = "605A34235509ABBB6946D10B499B526AC72774E441C3F9BAE4B63D321C6E759347D864CE879B39864743C0EEAC444FFF",
+		Constants = {" - On Xbox", " - On mobile", "_"},
+		IgnoreExecutor = true,
 	}
 
 	local Detected = filtergc("function", Query, true)
